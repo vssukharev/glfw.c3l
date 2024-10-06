@@ -328,8 +328,8 @@ const int DONT_CARE             = -1;
  * GLFW API types
  *************************************************************************/
  
-def GlProc = fn void(void);
-def VkProc = fn void(void);
+def GlProc = fn void();
+def VkProc = fn void();
 def Monitor = void;
 def Window = void;
 def Cursor = void;
@@ -352,7 +352,7 @@ def ScrollFun               = fn void(Window* window, double xoffset, double yof
 def KeyFun                  = fn void(Window* window, int key, int scancode, int action, int mods);
 def CharFun                 = fn void(Window* window, uint codepoint);
 def CharModsFun             = fn void(Window* window, uint codepoint, int mods);
-def DropFun                 = fn void(Window* window, int path_count, String[] paths);
+def DropFun                 = fn void(Window* window, int path_count, char*[] paths);
 def MonitorFun              = fn void(Monitor* monitor, int event);
 def JoystickFun             = fn void(int jid, int event);
  
@@ -392,15 +392,15 @@ struct GamepadState
  * GLFW API functions
  *************************************************************************/
 
-fn int init(void) @extern("glfwInit");
+fn int init() @extern("glfwInit");
 
-fn void terminate(void) @extern("glfwTerminate");
+fn void terminate() @extern("glfwTerminate");
 
 fn void initHint(int hint, int value) @extern("glfwInitHint");
 
 fn void getVersion(int* major, int* minor, int* rev) @extern("glfwGetVersion");
 
-fn char* getVersionString(void) @extern("glfwGetVersionString");
+fn char* getVersionString() @extern("glfwGetVersionString");
 
 fn int getError(String* description) @extern("glfwGetError");
 
@@ -408,7 +408,7 @@ fn ErrorFun setErrorCallback(ErrorFun callback) @extern("glfwSetErrorCallback");
 
 fn Monitor** getMonitors(int* count) @extern("glfwGetMonitors");
 
-fn Monitor* getPrimaryMonitor(void) @extern("glfwGetPrimaryMonitor");
+fn Monitor* getPrimaryMonitor() @extern("glfwGetPrimaryMonitor");
 
 fn void getMonitorPos(Monitor* monitor, int* xpos, int* ypos) @extern("glfwGetMonitorPos");
 
@@ -436,7 +436,7 @@ fn GammaRamp* getGammaRamp(Monitor* monitor) @extern("glfwGetGammaRamp");
  
 fn void setGammaRamp(Monitor* monitor, GammaRamp* ramp) @extern("glfwSetGammaRamp");
  
-fn void defaultWindowHints(void) @extern("glfwDefaultWindowHints");
+fn void defaultWindowHints() @extern("glfwDefaultWindowHints");
  
 fn void windowHint(int hint, int value) @extern("glfwWindowHint");
  
@@ -502,9 +502,9 @@ fn void setWindowUserPointer(Window* window, void* pointer) @extern("glfwSetWind
  
 fn void* getWindowUserPointer(Window* window) @extern("glfwGetWindowUserPointer");
  
-fn WindowPosFun setWindowPosCallback(Window* window, WindowPosfun callback) @extern("glfwSetWindowPosCallback");
+fn WindowPosFun setWindowPosCallback(Window* window, WindowPosFun callback) @extern("glfwSetWindowPosCallback");
  
-fn WindowSizefun setWindowSizeCallback(Window* window, WindowSizefun callback) @extern("glfwSetWindowSizeCallback");
+fn WindowSizeFun setWindowSizeCallback(Window* window, WindowSizeFun callback) @extern("glfwSetWindowSizeCallback");
  
 fn WindowCloseFun setWindowCloseCallback(Window* window, WindowCloseFun callback) @extern("glfwSetWindowCloseCallback");
  
@@ -520,19 +520,19 @@ fn FramebufferSizeFun setFramebufferSizeCallback(Window* window, FramebufferSize
  
 fn WindowContentScaleFun setWindowContentScaleCallback(Window* window, WindowContentScaleFun callback) @extern("glfwSetWindowContentScaleCallback");
  
-fn void pollEvents(void) @extern("glfwPollEvents");
+fn void pollEvents() @extern("glfwPollEvents");
  
-fn void waitEvents(void) @extern("glfwWaitEvents");
+fn void waitEvents() @extern("glfwWaitEvents");
  
 fn void waitEventsTimeout(double timeout) @extern("glfwWaitEventsTimeout");
  
-fn void postEmptyEvent(void) @extern("glfwPostEmptyEvent");
+fn void postEmptyEvent() @extern("glfwPostEmptyEvent");
  
 fn int getInputMode(Window* window, int mode) @extern("glfwGetInputMode");
  
 fn void setInputMode(Window* window, int mode, int value) @extern("glfwSetInputMode");
  
-fn int rawMouseMotionSupported(void) @extern("glfwRawMouseMotionSupported");
+fn int rawMouseMotionSupported() @extern("glfwRawMouseMotionSupported");
  
 fn char* getKeyName(int key, int scancode) @extern("glfwGetKeyName");
  
@@ -594,23 +594,23 @@ fn int updateGamepadMappings(char* string) @extern("glfwUpdateGamepadMappings");
  
 fn char* getGamepadName(int jid) @extern("glfwGetGamepadName");
  
-fn int getGamepadState(int jid, GLFWgamepadstate* state) @extern("glfwGetGamepadState");
+fn int getGamepadState(int jid, GamepadState* state) @extern("glfwGetGamepadState");
  
 fn void setClipboardString(Window* window, char* string) @extern("glfwSetClipboardString");
  
 fn char* getClipboardString(Window* window) @extern("glfwGetClipboardString");
  
-fn double getTime(void) @extern("glfwGetTime");
+fn double getTime() @extern("glfwGetTime");
  
 fn void setTime(double time) @extern("glfwSetTime");
  
-fn ulong getTimerValue(void) @extern("glfwGetTimerValue");
+fn ulong getTimerValue() @extern("glfwGetTimerValue");
  
-fn ulong getTimerFrequency(void) @extern("glfwGetTimerFrequency");
+fn ulong getTimerFrequency() @extern("glfwGetTimerFrequency");
  
 fn void makeContextCurrent(Window* window) @extern("glfwMakeContextCurrent");
  
-fn Window* getCurrentContext(void) @extern("glfwGetCurrentContext");
+fn Window* getCurrentContext() @extern("glfwGetCurrentContext");
  
 fn void swapBuffers(Window* window) @extern("glfwSwapBuffers");
  
@@ -620,12 +620,15 @@ fn int extensionSupported(char* extension) @extern("glfwExtensionSupported");
  
 fn GlProc getProcAddress(char* procname) @extern("glfwGetProcAddress");
  
-fn int vulkanSupported(void) @extern("glfwVulkanSupported");
+fn int vulkanSupported() @extern("glfwVulkanSupported");
  
 fn char** getRequiredInstanceExtensions(ulong* count) @extern("glfwGetRequiredInstanceExtensions");
 
 
-import vulkan @if($defined(INCLUDE_VULKAN));
+
+module glfw @if($defined(env::GLFW_INCLUDE_VULKAN) &&& env::GLFW_INCLUDE_VULKAN);
+
+import vulkan;
 
 fn VkProc getInstanceProcAddress(vk::Instance instance, char* procname) 
   @extern("glfwGetInstanceProcAddress") 
